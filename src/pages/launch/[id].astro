@@ -1,0 +1,81 @@
+---
+import Layout from '../../layouts/Layout.astro'
+import { getLaunchBy } from "../../services/spacex"
+import { type Doc, type Failure } from "../../types/api" 
+
+const { id } = Astro.params
+const { launch, failures }: { launch: Doc, failures: Failure[] } = await getLaunchBy({ id: id ?? '' })
+---
+
+<Layout title={`Lanzamiento ${launch?.name}` }>
+    <article class="rounded-lg border shadow-d bg-gray-800 border-gray-700 
+    place-content-center gap-3 place-items-center hover:scale-105 
+    hover:bg-gray-700 hover:border-gray-500 transition flex flex-col justify-center p-4">
+        <div class="flex">
+            <img 
+                class="w-60 h-60"
+                src={launch?.links?.patch.small} 
+                alt={launch?.name}  
+            />
+            <div class="ml-4">
+                <h2 class="text-3xl text-white font-bold">
+                    Launch #{launch?.flight_number} 
+                </h2>
+                <p class="text-2xl font-bold text-yellow-400">
+                    {launch.name}
+                </p>
+                <br>
+
+                <p class="text-lg font-bold text-white">
+                    Fecha:
+                </p>
+                <p class="text-lg text-white">
+                    {new Date(launch?.date_utc).toLocaleDateString()}
+                </p>
+                <br>
+
+                <p class="text-lg font-bold text-white">
+                    Detalles del Lanzamiento:
+                </p>
+                <p class="text-lg text-white">
+                    {launch?.details ? launch.details : "Información no encontrada"}
+                </p>
+
+                <br>
+
+                <p class="text-lg font-bold text-white">
+                    Tripulado:
+                </p>
+                <p class="text-lg text-white">
+                    {launch.crew ? 'Si' : 'No'}
+                </p>
+                <br>
+
+                {failures.length > 0 && (
+                    <>
+                        <br>
+                        <p class="text-lg font-bold text-white">
+                            Razón de los fallos:
+                        </p>
+                        <p class="text-lg text-white">
+                            {failures.map(failure => failure.reason).join(', ')}
+                        </p>
+                    </>
+                )}
+            
+            </div>
+        </div>
+        
+        {launch?.links?.youtube_id !== null && (
+            <div class="w-full aspect-w-16 aspect-h-9">
+                <iframe src={`https://www.youtube.com/embed/${launch?.links?.youtube_id}`} 
+                    title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; 
+                    encrypted-media; gyroscope; picture-in-picture" class="w-full h-80 sm:aspect-h-[9/16]">
+                </iframe>
+            </div>
+        )}
+    </article>
+    
+</Layout>
+
+
