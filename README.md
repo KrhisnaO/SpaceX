@@ -25,25 +25,5 @@ All commands are run from the root of the project, from a terminal:
 
 ## UML
 ```mermaid
-sequenceDiagram
-    participant User
-    participant System
 
-    User->>System: Enter API Key
-    User->>System: Upload PDF/PDF URL
-    User->>System: Ask Question
-    User->>System: Submit Call to Action
-
-    System->>System: Blank field Validations
-    System->>System: Convert PDF to Text
-    System->>System: Decompose Text to Chunks (150 word length)
-    System->>System: Check if embeddings file exists
-    System->>System: If file exists, load embeddings and set the fitted attribute to True
-    System->>System: If file doesn't exist, generate embeddings, fit the recommender, save embeddings to file and set fitted attribute to True
-    System->>System: Perform Semantic Search and return Top 5 Chunks with KNN
-    System->>System: Load Open AI prompt
-    System->>System: Embed Top 5 Chunks in Open AI Prompt
-    System->>System: Generate Answer with Davinci
-
-    System-->>User: Return Answer
 
